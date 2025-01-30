@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+torch
+transformers
+openai-whisper
+numpy
+ffmpeg-python  # Required for Whisper
