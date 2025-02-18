@@ -21,13 +21,12 @@ document.getElementById("stop").addEventListener("click", () => {
         let videoBlob = new Blob(recordedChunks, { type: "video/webm" });
         let videoUrl = URL.createObjectURL(videoBlob);
 
-        // Download the video
+      
         let videoLink = document.createElement("a");
         videoLink.href = videoUrl;
         videoLink.download = "meeting_recording.webm";
         videoLink.click();
 
-        // Extract and save the audio
         await extractAndSaveAudio(videoBlob);
 
         document.getElementById("start").disabled = false;
@@ -40,7 +39,7 @@ async function extractAndSaveAudio(videoBlob) {
     const arrayBuffer = await videoBlob.arrayBuffer();
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
     
-    // Convert audio buffer to WAV format
+    
     const wavBlob = audioBufferToWav(audioBuffer);
     const wavUrl = URL.createObjectURL(wavBlob);
 
@@ -49,7 +48,6 @@ async function extractAndSaveAudio(videoBlob) {
     audioLink.download = "meeting_audio.wav";
     audioLink.click();
 
-    // Now, upload the audio and get the summary
     uploadAudio(wavBlob);
 }
 
@@ -66,7 +64,7 @@ async function uploadAudio(audioBlob) {
         const data = await response.json();
 
         if (response.ok) {
-            // Display the summary and action items
+           
             const summaryContainer = document.getElementById("summaryContainer");
             const actionItemsContainer = document.getElementById("actionItemsContainer");
 
@@ -93,12 +91,12 @@ function audioBufferToWav(audioBuffer) {
     let wavHeader = new ArrayBuffer(44);
     let view = new DataView(wavHeader);
 
-    // RIFF chunk descriptor
+ 
     writeString(view, 0, "RIFF");
     view.setUint32(4, 36 + interleaved.length * 2, true);
     writeString(view, 8, "WAVE");
 
-    // fmt subchunk
+   
     writeString(view, 12, "fmt ");
     view.setUint32(16, 16, true);
     view.setUint16(20, format, true);
@@ -116,7 +114,7 @@ function audioBufferToWav(audioBuffer) {
     return audioBlob;
 }
 
-// Function to interleave multi-channel audio data
+
 function interleave(audioBuffer) {
     let numberOfChannels = audioBuffer.numberOfChannels;
     let length = audioBuffer.length * numberOfChannels;
@@ -137,7 +135,7 @@ function interleave(audioBuffer) {
     return int16Array;
 }
 
-// Utility function to write strings to a DataView
+
 function writeString(view, offset, string) {
     for (let i = 0; i < string.length; i++) {
         view.setUint8(offset + i, string.charCodeAt(i));
